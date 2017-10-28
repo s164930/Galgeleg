@@ -1,6 +1,6 @@
 package galgeleg;
 
-public class GalgelegTest {
+public class BenytGalgelogik {
 
   public static void main(String[] args) {
 
