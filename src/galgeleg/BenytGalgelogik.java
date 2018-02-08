@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.Scanner;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
-
+// hej simon
 public class BenytGalgelogik {
 
   public static void main(String[] args) throws Exception{
