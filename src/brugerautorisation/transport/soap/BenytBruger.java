@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package galgeleg.bruger;
+package brugerautorisation.transport.soap;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
@@ -15,15 +14,16 @@ import javax.xml.ws.Service;
  * @author viktor
  */
 public class BenytBruger {
-    
-    public BenytBruger(){
-        
+
+    public BenytBruger() {
+
     }
 
-    public boolean Login(String name, String pass) throws MalformedURLException{
+    public boolean LoginFraServer(String name, String pass) throws Exception {
         URL hej = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
         QName lol = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
         Service bum = Service.create(hej, lol);
+
         Brugeradmin ba = bum.getPort(Brugeradmin.class);
         
         try{
@@ -34,8 +34,7 @@ public class BenytBruger {
         }
         
         return true;
-        
-        
+
     }
 
 }

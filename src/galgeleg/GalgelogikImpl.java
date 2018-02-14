@@ -1,8 +1,7 @@
 
 package galgeleg;
 
-import galgeleg.bruger.BenytBruger;
-import galgeleg.bruger.Brugeradmin;
+import brugerautorisation.transport.soap.BenytBruger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,9 +11,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import javax.jws.WebService;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import java.net.MalformedURLException;
+
 
 @WebService(endpointInterface = "galgeleg.Galgelogik")
 public class GalgelogikImpl{
@@ -191,12 +188,12 @@ public class GalgelogikImpl{
     nulstil();
   }
   
-  public boolean Login(String name, String pass) throws MalformedURLException{
+  public boolean Login(String name, String pass) throws Exception{
       System.out.println(name);
       System.out.println(pass);
       BenytBruger b = new BenytBruger();
       
-      boolean login = b.Login(name, pass);
+      boolean login = b.LoginFraServer(name, pass);
       if(login){
           return true;
       } else {
