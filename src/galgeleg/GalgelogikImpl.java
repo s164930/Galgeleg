@@ -12,6 +12,13 @@ import java.util.HashSet;
 import java.util.Random;
 import javax.jws.WebService;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @WebService(endpointInterface = "galgeleg.Galgelogik")
 public class GalgelogikImpl{
@@ -144,46 +151,39 @@ public class GalgelogikImpl{
     return log;
   }
 
-    /**
-     *
-     * @param url
-     * @return
-     * @throws IOException
-     */
-    public static String hentUrl(String url) throws IOException {
-    System.out.println("Henter data fra " + url);
-    BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
-    StringBuilder sb = new StringBuilder();
-    String linje = br.readLine();
-    while (linje != null) {
-      sb.append(linje + "\n");
-      linje = br.readLine();
-    }
-    return sb.toString();
-  }
+
 
 
   public void hentOrdFraDr() throws Exception{
-    String data = hentUrl("https://dr.dk");
-    //System.out.println("data = " + data);
+        Client client = ClientBuilder.newClient();
+        Response res = client.target("https://www.dr.dk/mu-online/api/1.3/list/view/mostviewed?channel=dr1&channel=dr2&channeltype=TV&limit=48")
+                .request(MediaType.APPLICATION_JSON).get();
+        String svar = res.readEntity(String.class);
+        Random rand = new Random();
+        muligeOrd.clear();
+        int max = rand.nextInt(48)+1;
+        try {
+            JSONObject json = new JSONObject(svar);
+            for (int i = 0; i < max; i++) {
+                System.out.println(json.getJSONArray("Items").getJSONObject(i).getString("Title"));
+                String id = json.getJSONArray("Items").getJSONObject(i).getString("Slug");
+                Response prog = client.target("https://www.dr.dk/mu-online/api/1.3/programcard/" + id + "?")
+                        .request(MediaType.APPLICATION_JSON).get();
+                String progsvar = prog.readEntity(String.class);
+                JSONObject progj = new JSONObject(progsvar);
+                String data = progj.getString("Description");
+                data = data.substring(0).replaceAll("<.+?>", " ").toLowerCase().
+                        replaceAll("[^a-zæøå]", " "). // fjern tegn der ikke er bogstaver
+                        replaceAll(" [a-zæøåx] "," "). // fjern 1-bogstavsord
+                        replaceAll(" [a-zæøåx][a-zæøåx] "," "); // fjern 2-bogstavsord         
+                muligeOrd.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
+            }
 
-    data = data.substring(data.indexOf("<body")). // fjern headere
-            replaceAll("<.+?>", " ").toLowerCase(). // fjern tags
-            replaceAll("&#198;", "æ"). // erstat HTML-tegn
-            replaceAll("&#230;", "æ"). // erstat HTML-tegn
-            replaceAll("&#216;", "ø"). // erstat HTML-tegn
-            replaceAll("&#248;", "ø"). // erstat HTML-tegn
-            replaceAll("&oslash;", "ø"). // erstat HTML-tegn
-            replaceAll("&#229;", "å"). // erstat HTML-tegn
-            replaceAll("[^a-zæøå]", " "). // fjern tegn der ikke er bogstaver
-            replaceAll(" [a-zæøå] "," "). // fjern 1-bogstavsord
-            replaceAll(" [a-zæøå][a-zæøå] "," "); // fjern 2-bogstavsord
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
 
-    System.out.println("data = " + data);
-    System.out.println("data = " + Arrays.asList(data.split("\\s+")));
-    muligeOrd.clear();
-    muligeOrd.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
-
+    
     System.out.println("muligeOrd = " + muligeOrd);
     nulstil();
   }

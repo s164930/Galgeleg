@@ -21,5 +21,4 @@ public class GalgeServer {
                 Endpoint.publish("http://[::]:4930/Galgespil", l);
 		System.out.println("Galgeleg startet");
 	}
-    
 }
