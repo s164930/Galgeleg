@@ -2,10 +2,6 @@
 package galgeleg;
 
 import brugerautorisation.transport.soap.BenytBruger;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -16,7 +12,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -174,8 +169,8 @@ public class GalgelogikImpl{
                 String data = progj.getString("Description");
                 data = data.substring(0).replaceAll("<.+?>", " ").toLowerCase().
                         replaceAll("[^a-zæøå]", " "). // fjern tegn der ikke er bogstaver
-                        replaceAll(" [a-zæøåx] "," "). // fjern 1-bogstavsord
-                        replaceAll(" [a-zæøåx][a-zæøåx] "," "); // fjern 2-bogstavsord         
+                        replaceAll(" [a-zæøå] "," "). // fjern 1-bogstavsord
+                        replaceAll(" [a-zæøå][a-zæøå] "," "); // fjern 2-bogstavsord         
                 muligeOrd.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
             }
 

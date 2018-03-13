@@ -1,4 +1,4 @@
-package galgeleg;
+    package galgeleg;
 
 import java.net.URL;
 import java.util.Scanner;
@@ -8,7 +8,7 @@ public class BenytGalgelogik {
 
   public static void main(String[] args) throws Exception{
     Scanner s = new Scanner(System.in);
-    URL url = new URL("http://localhost:4930/Galgespil?wsdl");
+    URL url = new URL("http://ubuntu4.saluton.dk:4930/Galgespil?wsdl");
     QName qname = new QName("http://galgeleg/", "GalgelogikImplService");
     Service service = Service.create(url, qname);
     boolean login = false;
